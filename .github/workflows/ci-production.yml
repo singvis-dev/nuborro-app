@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+  deployments: write
+
 jobs:
   type-check:
     name: Type Check
@@ -12,6 +16,7 @@ jobs:
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,6 +40,7 @@ jobs:
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -59,6 +65,7 @@ jobs:
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,7 +83,7 @@ jobs:
         run: npm run build
 
   migrate:
-    name: DB Migrations
+    name: Database Migrations
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: build
@@ -111,8 +118,8 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
 
-  notify:
-    name: Post-Deploy Notify
+  post-deploy:
+    name: Post-Deploy Notifications
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: deploy
@@ -130,8 +137,10 @@ jobs:
 
       - name: Notify success
         if: needs.deploy.result == 'success'
-        run: echo "✅ Production deploy successful — nuborro.com is live"
+        run: echo "✅ Production deployment successful — nuborro.com is live"
 
       - name: Notify failure
         if: needs.deploy.result == 'failure'
-        run: echo "❌ Production deploy FAILED — check logs immediately"
+        run: |
+          echo "❌ Production deployment FAILED"
+          exit 1
