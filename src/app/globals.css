@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --ink:    #0f0f0f;
+  --paper:  #f7f4ef;
+  --accent: #ff5c1a;
+  --muted:  #8a8680;
+  --card:   #ffffff;
+  --border: #e2ddd7;
+
+  --font-inter: 'Inter', sans-serif;
+  --font-syne:  'Syne', sans-serif;
+}
+
+/* Mobile-first base */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-inter);
+  background-color: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Safe area for mobile notch/home bar */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Minimum tap target size — 44x44px */
+button, a, input, select, textarea {
+  min-height: 44px;
+}
+
+/* Prevent font scaling on form inputs on iOS */
+input, select, textarea {
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
